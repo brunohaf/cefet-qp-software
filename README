@@ -1,0 +1,10 @@
+# Fantasy Home Brew
+
+## Como executar
+Com o intuito de facilitar a execução deste projeto, preparamos uma imagem Docker para ser executada de qualquer computador (Linux ou Windows).
+
+Basta executar:
+```
+docker run -p 8080:8080 heitoramaral/cefet-qps-fhb:latest
+```
+Após a execução basta abrir o navegador e digitar http://localhost:8080

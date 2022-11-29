@@ -1,53 +1,68 @@
 package com.cefetqps.spring.services;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.cefetqps.spring.Constants;
 import com.cefetqps.spring.models.User;
-import com.cefetqps.spring.utils.PersistenceUtils;
+import com.cefetqps.spring.services.interfaces.DatabaseClient;
 
 @Service
 @Scope("singleton")
 public class UserServices {
 
-    private ArrayList<User> userDataBase;
+    private DatabaseClient<User> userDatabaseClient;
 
     private final String randomUserNameTemplate = "user%d";
     private final Random randomNumberGenerator;
     private UserSecretServices userSecretServices;
 
     @Autowired
-    public UserServices(UserSecretServices userSecretServices, PersistenceUtils persistenceUtils) {
+    public UserServices(
+        UserSecretServices userSecretServices,
+        DatabaseClient<User> userDatabaseClient) {
         this.randomNumberGenerator = new Random();
         this.userSecretServices = userSecretServices;
-        this.userDataBase = persistenceUtils.userDataBaseMockupList;
-
+        this.userDatabaseClient = userDatabaseClient;
     }
 
     public boolean saveUserData(User user){
-        try{
-            return userDataBase.add(user);
-        }
-        catch(Exception ex){
-            return false;
-        }
+       return userDatabaseClient.save(user);
     }
 
-    public User getById(int id){
+    public Optional<User> getById(int id){
         try{
-            return userDataBase.get(id);
+            return userDatabaseClient.getById(id);
         }
         catch(IndexOutOfBoundsException indexOutOfBoundsException){
-            return generateRandomUser();
+            return Optional.of(generateRandomUser());
         }
     }
 
-    public ArrayList<User> getAll(){
-        return userDataBase;
+    public User getByEmail(String email){
+        HashMap<String, User> userHashMap = indexUserDataBaseByEmail();
+        User fetchedUser = userHashMap.get(email);
+        return  fetchedUser != null ? fetchedUser : generateRandomUser();
+
+    }
+
+    public Collection<User> getAll(){
+        return userDatabaseClient.getAll();
+    }
+
+    private HashMap<String, User> indexUserDataBaseByEmail(){
+        HashMap<String, User> userHashMap = new HashMap<String, User>();
+        for (User user : this.getAll()) {
+            userHashMap.put(user.getEmail(), user);
+        }
+        return userHashMap;
     }
 
     public User generateRandomUser(){
@@ -62,7 +77,7 @@ public class UserServices {
             );
 
         user.setEmail(String.format(
-            PersistenceUtils.RANDOM_USER_EMAIL_TEMPLATE,
+            Constants.RANDOM_USER_EMAIL_TEMPLATE,
                 randomUserName)
             );
         return user;

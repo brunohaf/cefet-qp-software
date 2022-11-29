@@ -22,7 +22,7 @@ public class UserAuthenticationServices {
     public boolean login(User user){
         User userStoredData = userServices.getByEmail(user.getEmail());
 
-        return userSecretServices.decodeUserSecret(user.getPassword()) == 
-            userSecretServices.decodeUserSecret(userStoredData.getPassword());
+        return user.getPassword().equals(  
+            userSecretServices.decodeUserSecret(userStoredData.getPassword()));
     }
 }

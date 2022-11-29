@@ -1,10 +1,8 @@
 package com.cefetqps.spring.services.clients;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,13 @@ import com.cefetqps.spring.services.interfaces.DatabaseClient;
 @Scope("singleton")
 public class UserDatabaseClient implements DatabaseClient<User> {
 
-    private ArrayList<User> userDataBaseMockupList = getStaticMockupUsers();
+    private ArrayList<User> userDataBaseMockupList;
+    private AtomicInteger userIdIncrementer;
+
+    public UserDatabaseClient() {
+        this.userDataBaseMockupList = getStaticMockupUsers();
+        this.userIdIncrementer = new AtomicInteger(Constants.ID_INCREMENTER_START_OFFSET);
+    }
 
     public boolean getConnetion(){
         return true;
@@ -33,6 +37,7 @@ public class UserDatabaseClient implements DatabaseClient<User> {
 
     public boolean save(User user){
         try{
+            user.setId(userIdIncrementer.incrementAndGet());
             return userDataBaseMockupList.add(user);
         }
         catch(Exception ex){
@@ -50,6 +55,6 @@ public class UserDatabaseClient implements DatabaseClient<User> {
 
     private User getStaticUser(String name){
         String email = String.format(Constants.RANDOM_USER_EMAIL_TEMPLATE, name);
-        return new User(email, "12345");
+        return new User(userIdIncrementer.incrementAndGet(), email, "12345");
     }
 }

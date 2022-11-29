@@ -54,6 +54,6 @@ public class UserDatabaseClient implements DatabaseClient<User> {
 
     private User getStaticUser(String name){
         String email = String.format(Constants.RANDOM_USER_EMAIL_TEMPLATE, name);
-        return new User(userIdIncrementer.incrementAndGet(), email, "12345");
+        return new User(userIdIncrementer.incrementAndGet(), email, "MTIzNDU=");
     }
 }

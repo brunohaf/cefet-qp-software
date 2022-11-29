@@ -5,19 +5,24 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.cefetqps.spring.models.User;
 import com.cefetqps.spring.services.UserAuthenticationServices;
 import com.cefetqps.spring.services.UserServices;
 
-@RestController
-@RequestMapping("users")
+@Controller
+@SessionAttributes("name")
 public class UserController {
 
     private UserServices userServices;
@@ -29,6 +34,11 @@ public class UserController {
             
         this.userServices = userServices;
         this.userAuthenticationServices = userAuthenticationServices;
+    }
+
+    @RequestMapping(value="/login", method = RequestMethod.GET)
+    public String showLoginPage(ModelMap model){
+        return "login";
     }
 
     @GetMapping("{id}")
@@ -47,15 +57,20 @@ public class UserController {
         return new ResponseEntity<>(userServices.getAll(), HttpStatus.OK);
     }
 
-    @PostMapping()
-    @RequestMapping("authenticate")
-    public ResponseEntity<String> authenticate(@RequestBody User user) {
-        boolean hasloginSucceeded = userAuthenticationServices.login(user);
-        return new ResponseEntity<>(
-            "User authenticated!",
-            hasloginSucceeded ?
-            HttpStatus.ACCEPTED :
-            HttpStatus.UNAUTHORIZED);
+    @RequestMapping(value="/login", method = RequestMethod.POST)
+    public String showWelcomePage(ModelMap model, @RequestParam String email, @RequestParam String password){
+
+        boolean isValidUser = userAuthenticationServices.login(new User(email, password));
+
+        if (!isValidUser) {
+            model.put("errorMessage", "Invalid Credentials");
+            return "login";
+        }
+
+        model.put("email", email);
+        model.put("password", password);
+
+        return "welcome";
     }
 
     @PostMapping()

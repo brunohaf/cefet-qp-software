@@ -1,11 +1,11 @@
 <html>
 
 <head>
-<title>First Web Application</title>
+<title>Welcome to FHB</title>
 </head>
 
 <body>
-    Welcome ${email}!! <a href="/users">Click here</a> to view all users.
+    Welcome ${name}!! <a href="/home?userId=${userId}">Click here</a> to access your home page.
 </body>
 
 </html>

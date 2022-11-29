@@ -16,11 +16,10 @@ import com.cefetqps.spring.services.interfaces.DatabaseClient;
 public class UserDatabaseClient implements DatabaseClient<User> {
 
     private ArrayList<User> userDataBaseMockupList;
-    private AtomicInteger userIdIncrementer;
+    private AtomicInteger userIdIncrementer = new AtomicInteger(Constants.ID_INCREMENTER_START_OFFSET);
 
     public UserDatabaseClient() {
         this.userDataBaseMockupList = getStaticMockupUsers();
-        this.userIdIncrementer = new AtomicInteger(Constants.ID_INCREMENTER_START_OFFSET);
     }
 
     public boolean getConnetion(){

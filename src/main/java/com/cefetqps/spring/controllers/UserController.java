@@ -48,6 +48,7 @@ public class UserController {
     }
 
     @PostMapping()
+    @RequestMapping("authenticate")
     public ResponseEntity<String> authenticate(@RequestBody User user) {
         boolean hasloginSucceeded = userAuthenticationServices.login(user);
         return new ResponseEntity<>(

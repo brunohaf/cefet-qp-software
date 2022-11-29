@@ -57,4 +57,13 @@ public class UserController {
             HttpStatus.ACCEPTED :
             HttpStatus.UNAUTHORIZED);
     }
+
+    @PostMapping()
+    public ResponseEntity<String> saveUserData(@RequestBody User user) {
+        return new ResponseEntity<>(
+            "User created!",
+            userServices.saveUserData(user) ?
+            HttpStatus.ACCEPTED :
+            HttpStatus.BAD_REQUEST);
+    }
 }

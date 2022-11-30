@@ -1,10 +1,25 @@
 # Fantasy Home Brew
 
 ## Como executar
+
+<!-- ### Via Docker
 Com o intuito de facilitar a execução deste projeto, preparamos uma imagem Docker para ser executada de qualquer computador (Linux ou Windows).
 
 Basta executar:
 ```
 docker run -p 8080:8080 heitoramaral/cefet-qps-fhb:latest
+``` -->
+
+### Via Java local
+É necessário ter o Java 17 instalado na máquina.
+
+Para computadores Linux
+```
+./mvnw spring-boot:run
+```
+
+Para computadores Windows
+```
+mvnw spring-boot:run
 ```
 Após a execução basta abrir o navegador e digitar http://localhost:8080

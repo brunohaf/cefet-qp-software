@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Login :: FHB</title>
+    <title>Register :: FHB</title>
 
     <style>
       body {
@@ -35,9 +35,19 @@
         cursor: pointer;
       }
 
-      .register-button {
-        display: flex;
-        justify-content: end;
+      .cancel-button {
+        width: 77%;
+        margin-top: 40px;
+        border: none;
+        background-color: #e74c3c;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -52,11 +62,11 @@
           <font color="red">${errorMessage}</font>
         </div>
         <div>
-          <input class="submit-button" type="submit" value="Login" />
+          <input class="submit-button" type="submit" value="Register" />
         </div>
-        <div class="register-button">
-           <a href="/users/register">Register</a>
-        </div>
+        <a href="/users/login">
+          <div class="cancel-button">Cancel</div>
+        </a>
       </form>
     </div>
   </body>

@@ -48,7 +48,7 @@ public class UserServices {
     public User getByEmail(String email){
         HashMap<String, User> userHashMap = indexUserDataBaseByEmail();
         User fetchedUser = userHashMap.get(email);
-        return  fetchedUser != null ? fetchedUser : generateRandomUser();
+        return fetchedUser;
     }
 
     public Collection<User> getAll(){

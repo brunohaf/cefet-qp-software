@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.cefetqps.spring.models.Post;
+import com.cefetqps.spring.services.clients.UserDatabaseClient;
 import com.cefetqps.spring.services.interfaces.DatabaseClient;
 
 @Service
@@ -19,23 +20,31 @@ public class PostServices {
 
     @Autowired
     public PostServices(
-        DatabaseClient<Post> postDatabaseClient) {
+            DatabaseClient<Post> postDatabaseClient) {
         this.postDatabaseClient = postDatabaseClient;
     }
 
-    public boolean savePostData(Post Post){
-       return postDatabaseClient.save(Post);
+    public PostServices(UserDatabaseClient userDatabaseClient) {
     }
 
-    public Optional<Post> getById(int id){
+    public boolean savePostData(Post Post) {
+        return postDatabaseClient.save(Post);
+    }
+
+    public Optional<Post> getById(int id) {
         return postDatabaseClient.getById(id);
     }
 
-    public ArrayList<Post> getByUserId(int userId){
-        return new ArrayList<Post> (
-            postDatabaseClient.getAll().stream()
-            .filter(n -> n.getUserId() == userId)
-            .collect(Collectors.toList())
-            );
+    public ArrayList<Post> getAll() {
+        return new ArrayList<Post>(
+                postDatabaseClient.getAll().stream()
+                        .collect(Collectors.toList()));
+    }
+
+    public ArrayList<Post> getByUserId(int userId) {
+        return new ArrayList<Post>(
+                postDatabaseClient.getAll().stream()
+                        .filter(n -> n.getUserId() == userId)
+                        .collect(Collectors.toList()));
     }
 }

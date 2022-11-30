@@ -10,7 +10,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,21 +25,27 @@ public class PostController {
     private PostServices postServices;
 
     public PostController(PostServices postServices) {
-            
+
         this.postServices = postServices;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String showPostsPage(ModelMap model, @RequestParam int userId){
-        ArrayList<Post> lista = postServices.getByUserId(userId);
-        model.put("postList", lista);
+    public String showPostsPage(ModelMap model, @RequestParam(value = "userId", required = false) Integer userId) {
+        ArrayList<Post> postList;
+        if (userId == null) {
+            postList = postServices.getAll();
+        } else {
+            postList = postServices.getByUserId(userId);
+        }
+
+        model.put("postList", postList);
         return "posts";
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Post> getPostById(@PathVariable("id") int id) {
         Optional<Post> existingPostOptional = postServices.getById(id);
-        
+
         if (existingPostOptional.isPresent()) {
             return new ResponseEntity<>(postServices.getById(id).get(), HttpStatus.OK);
         }
@@ -51,9 +56,7 @@ public class PostController {
     @PostMapping()
     public ResponseEntity<String> savePostData(@RequestBody Post post) {
         return new ResponseEntity<>(
-            "Post created!",
-            postServices.savePostData(post) ?
-            HttpStatus.ACCEPTED :
-            HttpStatus.BAD_REQUEST);
+                "Post created!",
+                postServices.savePostData(post) ? HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST);
     }
 }
